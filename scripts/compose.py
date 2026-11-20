@@ -3,8 +3,9 @@ Latte text colours.
 
 python compose.py <particle_frames_dir>
 Writes assets/header-{mocha,latte}.webp, the header with the turning particle,
-and assets/koi-{mocha,latte}.png, the toolkit row that koi_card.py swims the
-koi onto. Needs Pillow, Fira Sans and JetBrains Mono.
+assets/koi-{mocha,latte}.png, the toolkit row that koi_card.py swims the koi
+onto, and the link icons assets/icon-*-{mocha,latte}.png. Needs Pillow, Fira
+Sans and JetBrains Mono Nerd Font.
 """
 import sys
 from pathlib import Path
@@ -21,7 +22,9 @@ FONTS = Path.home() / "Library" / "Fonts"
 WIDTH = 1680
 HEADER_H, TOOLKIT_H = 600, 512
 PARTICLE = 640
+FRAME_MS = 45
 X0 = 4
+ICON = 56
 
 FLAVOURS = {
     "mocha": dict(text=(205, 214, 244), subtext=(166, 173, 200), overlay=(127, 132, 156),
@@ -40,6 +43,12 @@ TOOLKIT = (
     ("Languages", ("Fortran", "Python", "Rust", "Bash", "LaTeX")),
     ("Tools", ("Git", "Neovim", "Blender", "ASE")),
 )
+ICONS = {
+    "email": "\U000f01f0",
+    "orcid": "",
+    "paper": "\U000f09ee",
+    "koi": "\U000f023a",
+}
 
 
 def sans(weight, size):
@@ -115,13 +124,26 @@ def toolkit(c):
     return img
 
 
+def icon(glyph, c):
+    """A link icon, its glyph scaled to fill most of the square."""
+    path = str(FONTS / "JetBrainsMonoNerdFont-Regular.ttf")
+    x0, y0, x1, y1 = ImageFont.truetype(path, 100).getbbox(glyph)
+    fnt = ImageFont.truetype(path, round(100 * 0.82 * ICON / max(x1 - x0, y1 - y0)))
+    x0, y0, x1, y1 = fnt.getbbox(glyph)
+    img = Image.new("RGBA", (ICON, ICON), (0, 0, 0, 0))
+    text(img, ((ICON - x1 - x0) / 2, (ICON - y1 - y0) / 2), glyph, fnt, c["subtext"], anchor="la")
+    return img
+
+
 def main():
     ASSETS.mkdir(exist_ok=True)
     for name, c in FLAVOURS.items():
+        for key, glyph in ICONS.items():
+            icon(glyph, c).save(ASSETS / f"icon-{key}-{name}.png")
         toolkit(c).save(ASSETS / f"koi-{name}.png")
         frames = header(sys.argv[1], c)
         frames[0].save(ASSETS / f"header-{name}.webp", save_all=True, append_images=frames[1:],
-                       duration=90, loop=0, quality=86, method=6)
+                       duration=FRAME_MS, loop=0, quality=84, method=6)
 
 
 if __name__ == "__main__":
