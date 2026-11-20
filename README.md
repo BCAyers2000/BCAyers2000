@@ -1,0 +1,5 @@
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/header-mocha.webp"><img src="assets/header-latte.webp" width="100%" alt="Brad Ayers. Electronic structure for electrochemistry. Grand-canonical DFT in ONETEP and FHI-aims, a direct ensemble minimiser for Quantum ESPRESSO, and lithium nanoparticles under applied potential. University of Southampton. A lithium nanoparticle turns slowly about [001]."></picture>
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="koi/koi-mocha.webp"><img src="koi/koi-latte.webp" width="100%" alt="Codes ONETEP, FHI-aims, Quantum ESPRESSO and VASP. Languages Fortran, Python, Rust, Bash and LaTeX. Tools Git, Neovim, Blender and ASE. Beside them swims my koi, grown from my GitHub activity and redrawn every night."></picture>
+
+[Email](mailto:ayersbrad6@googlemail.com) &nbsp;·&nbsp; [ORCID](https://orcid.org/0000-0002-7439-6568) &nbsp;·&nbsp; [Latest paper](https://doi.org/10.1039/D5TA09820C) &nbsp;·&nbsp; [Koi](https://github.com/yalongwastaken/git-koi)

@@ -1,0 +1,43 @@
+name: Koi
+
+on:
+  schedule:
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/koi.yml
+      - scripts/koi_card.py
+      - assets/koi-*.png
+
+permissions:
+  contents: write
+
+concurrency: koi
+
+jobs:
+  koi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: yalongwastaken/git-koi@v1
+        with:
+          body: asagi
+          output-dir: koi
+      - name: Put the koi on its cards
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet pillow
+          "$RUNNER_TEMP/venv/bin/python" scripts/koi_card.py koi/koi.gif assets koi
+      - name: Commit the koi if it changed
+        shell: bash
+        run: |
+          git add koi/koi-mocha.webp koi/koi-latte.webp
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet --message "Redraw the koi"
+          git push --quiet
